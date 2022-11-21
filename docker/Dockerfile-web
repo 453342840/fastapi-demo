@@ -1,0 +1,11 @@
+FROM node:lts
+
+WORKDIR /ftrunk
+COPY ./ftrunk /ftrunk
+
+RUN npm config set registry http://registry.npm.taobao.org
+RUN npm install cnpm -g
+RUN cnpm install 
+
+# 打包
+RUN cnpm run build

@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    command: [ # 使用 command 可以覆盖容器启动后默认执行的命令
+        "--character-set-server=utf8mb4",        #设置数据库表的数据集
+        "--collation-server=utf8mb4_unicode_ci", #设置数据库表的数据集
+    ]
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=Asia/Shanghai
+
+  redis:
+    image: redis:6.0
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
