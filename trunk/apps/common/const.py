@@ -1,0 +1,5 @@
+CODE_SUCCESS = 200
+CODE_ERROR = 500
+CODE_TIMEOUT = 504
+
+WECHAT_TOKEN = 'wechat.token.{app_id}'

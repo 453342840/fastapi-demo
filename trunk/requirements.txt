@@ -1,0 +1,10 @@
+fastapi[all]==0.85.0
+uvicorn[standard]==0.18.3
+tortoise-orm[aiomysql]==0.19.2
+aerich==0.7.1
+aioredis==2.0.1
+loguru==0.6.0
+pycrypto==2.6.1
+aiohttp==3.8.3
+python-jose==3.3.0
+passlib[bcrypt]==1.7.4
