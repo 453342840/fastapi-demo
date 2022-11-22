@@ -3,7 +3,7 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from apps.common.utils.response import fail, success
 from apps.user.curd.user import add_user
 from apps.user.schemas.user import UserInfo
-from apps.user.tool.auth import authenticate_user, create_access_token, login_require
+from apps.user.utils.auth import authenticate_user, create_access_token, login_require
 
 router = APIRouter()
 
