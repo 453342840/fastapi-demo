@@ -22,7 +22,7 @@ async def info(id: int, data: UserForm):
     return success()
 
 
-@router.get('/query', summary='所有用户列表')
+@router.get('/query', summary='所有用户列表', dependencies=[Security(login_require)])
 async def query(username: Optional[str] = '', nickname: Optional[str] = '', page: int = 1, page_size: int = 10):
     q = Q()
     if username:

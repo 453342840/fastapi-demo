@@ -61,7 +61,7 @@ class AioMysql:
     async def excete(cls):
         """
         :example:
-            async with AioMySQL.excete():
+            async with AioMysql.excete():
                 await async_func()
         """
         await cls.connect()
@@ -181,7 +181,7 @@ class MySQLUtils(Model):
         else:
             if fetch_related:
                 queryset_model = queryset_model.prefetch_related(*fetch_related)
-            model = await queryset_model
+            model = queryset_model
 
         if not model:
             return None
