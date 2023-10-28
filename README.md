@@ -10,14 +10,14 @@ make run [env=dev|test|pro]
 2. 启动中间件
 make db [env=dev|test|pro]
 
-3. 初始化数据库表（只需第一次执行）
+3. 初始化数据库表（只需第一次执行，注意：需要在docker容器user中执行）
 aerich init -t common.databases.mysql.mysql_config
 aerich init-db
 
 4. 初始化菜单（注意：需要在docker容器user中执行）
 env PYTHONPATH=. python ./script/init_menu.py
 ```
-启动后浏览器输入：http://127.0.0.1/admin 即可进入后台系统
+启动后浏览器输入：http://127.0.0.1/admin 即可进入后台系统 (默认验证码：888888)
 
 启动后浏览器输入：http://127.0.0.1/docs/user 即可查看对应的接口文档 
 
