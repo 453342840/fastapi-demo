@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx:1.24.0
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+      - "19094:19094"
+#    network_mode: host   # 与主机共享端口
+    volumes:
+      - ${DOCKER_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${DOCKER_DIR}/nginx/conf.d:/etc/nginx/conf.d
+      - ${DOCKER_DIR}/nginx/common:/etc/nginx/common
+      - ${DOCKER_DIR}/nginx/log:/var/log/nginx
+      - ${DOCKER_DIR}/www:/var/www
+    restart: always
+    networks:
+      - service_net
+    environment:
+      - TZ=Asia/Shanghai
+
+  user:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    image: demo:latest
+    ports:
+      - "8080:8080"
+    # scale: 2   # expose暴露容器端口，不开放主机端口，配合scale实现负责均衡
+    volumes:
+      - ../:/demo
+    command: uvicorn apps.user.main:app --host 0.0.0.0 --port 8080 --reload
+    restart: always
+    networks:
+      - service_net
+    environment:
+      - TZ=Asia/Shanghai
+
+networks:
+  service_net:
+    name: 'service_net'
+    driver: bridge
+

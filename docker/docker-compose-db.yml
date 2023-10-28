@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${DOCKER_DIR}/mysql/conf:/etc/mysql
+      - ${DOCKER_DIR}/mysql/data:/var/lib/mysql
+    command: [ # 使用 command 可以覆盖容器启动后默认执行的命令
+      "mysqld",
+      "--character-set-server=utf8mb4",   # 设置数据库表的数据集
+      "--collation-server=utf8mb4_unicode_ci",
+      "--skip-character-set-client-handshake"   # 保存客户端字符和服务器字符一致
+    ]
+    restart: always
+    networks:
+      - db_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=Asia/Shanghai
+    platform: linux/x86_64  # mac M1使用
+
+  redis:
+    image: redis:6.2.10
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ${DOCKER_DIR}/redis/data:/data
+      - ${DOCKER_DIR}/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command:
+      --requirepass ${REDIS_PASSWORD}
+    restart: always
+    networks:
+      - db_net
+    environment:
+      - TZ=Asia/Shanghai
+
+networks:
+  db_net:
+    name: service_net
+    external: true

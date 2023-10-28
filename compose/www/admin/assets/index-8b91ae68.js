@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-c27b6911.js";import{aU as r,aV as c}from"./index-cbb60d43.js";const n={};function o(t,a){return r(),c("div",null," 欢迎使用本后台管理系统 ")}const f=e(n,[["render",o]]);export{f as default};

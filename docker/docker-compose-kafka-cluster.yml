@@ -1,0 +1,113 @@
+version: "3.9"
+
+services:
+  kafka1:
+    image: bitnami/kafka:3.5.1
+    container_name: kafka1
+    user: root
+    ports:
+      - "9094:9094"
+    volumes:
+      - ${DOCKER_DIR}/kafka1:/bitnami/kafka
+    restart: always
+    networks:
+      - kafka_net
+    environment:
+      - TZ=Asia/Shanghai
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_HEAP_OPTS=-Xmx512M -Xms128M
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NUM_PARTITIONS=3                  # topic分区数
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3      # topic副本数
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3   # __consumer_offsets副本数（默认1个副本，会有单点故障问题）
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3  # __transaction_state副本数
+      - KAFKA_KRAFT_CLUSTER_ID=relM2oIFQkiUFvgCEcqRWb
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://${KAFKA_HOST}:9094
+
+
+
+  kafka2:
+    image: bitnami/kafka:3.5.1
+    container_name: kafka2
+    user: root
+    ports:
+      - "9095:9095"
+    volumes:
+      - ${DOCKER_DIR}/kafka2:/bitnami/kafka
+    restart: always
+    networks:
+      - kafka_net
+    environment:
+      - TZ=Asia/Shanghai
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_HEAP_OPTS=-Xmx512M -Xms128M
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_KRAFT_CLUSTER_ID=relM2oIFQkiUFvgCEcqRWb
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9095
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://${KAFKA_HOST}:9095
+
+  kafka3:
+    image: bitnami/kafka:3.5.1
+    container_name: kafka3
+    user: root
+    ports:
+      - "9096:9096"
+    volumes:
+      - ${DOCKER_DIR}/kafka3:/bitnami/kafka
+    restart: always
+    networks:
+      - kafka_net
+    environment:
+      - TZ=Asia/Shanghai
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_HEAP_OPTS=-Xmx512M -Xms128M
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_KRAFT_CLUSTER_ID=relM2oIFQkiUFvgCEcqRWb
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9096
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://${KAFKA_HOST}:9096
+
+  kafka-console:
+    image: redpandadata/console:latest
+    container_name: kafka-console
+    ports:
+      - "9099:8080"
+    restart: always
+    networks:
+      - kafka_net
+    environment:
+      KAFKA_BROKERS: "kafka1:9092,kafka2:9092,kafka3:9092"
+
+networks:
+  kafka_net:
+    name: service_net
+    external: true
