@@ -24,7 +24,7 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - TZ=Asia/Shanghai
-    platform: linux/x86_64  # mac M1使用
+#    platform: linux/x86_64  # mac M1使用
 
   redis:
     image: redis:6.2.10

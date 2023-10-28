@@ -5,6 +5,7 @@ from apps.user.main import app
 from common.const import const
 from common.depends.login_auth import login_require
 from common.models.user import User
+from common.utils.func import sha1
 
 
 @pytest.fixture(scope="session")
@@ -16,7 +17,12 @@ async def client():
 
 # 覆盖所有需要登录依赖
 async def override_login_require():
-    user = await User.get_or_create(username='test_user', nickname='测试用户', phone='13488888888', password='123')
+    data = {
+        'nickname': '测试用户',
+        'phone': '13488888888',
+        'password': sha1('123456')
+    }
+    user = await User.get_or_create(defaults=data, username='test_user')
     return user
 
 app.dependency_overrides[login_require] = override_login_require
@@ -30,7 +36,7 @@ async def test_info(client: AsyncClient):
 
 
 @pytest.mark.anyio
-@pytest.mark.parametrize('id, data', [(1, {'username': 'xiaohong', 'nickname': '小红', 'phone': '13466666666'})])
+@pytest.mark.parametrize('id, data', [(100, {'username': 'xiaohong', 'nickname': '小红', 'phone': '13466666666'})])
 async def test_info_id(client: AsyncClient, id, data):
     response = await client.put(f"/info/{id}", json=data)
     assert response.status_code == 200
