@@ -32,8 +32,6 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://${KAFKA_HOST}:9094
 
-
-
   kafka2:
     image: bitnami/kafka:3.5.1
     container_name: kafka2

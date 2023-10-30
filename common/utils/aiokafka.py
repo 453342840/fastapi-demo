@@ -1,7 +1,6 @@
 import asyncio
 import json
 import random
-import time
 import traceback
 from functools import wraps
 from typing import List, Optional
@@ -10,9 +9,7 @@ from aiokafka.admin import AIOKafkaAdminClient
 from kafka.admin import NewTopic
 from kafka.partitioner import murmur2
 from loguru import logger
-from common.config.base_config import settings
-from common.databases.redis import AioRedis
-from common.utils.func import uuid_str
+from common.base_config import settings
 
 # 默认配置：初始化Topic定义，三个节点，2个副本，最大程度保证可靠（两个副本，只能挂一台机器）
 topics_setting = {'num_partitions': 3, 'replication_factor': 2, 'topic_configs': {'min.insync.replicas': 1}}
